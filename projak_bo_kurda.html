@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projak Bo Kurda - Modern Boost & Digital Services Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        navy: {
+                            800: '#1e293b',
+                            900: '#0b192c',
+                            950: '#060e1a'
+                        },
+                        kurdish: {
+                            gold: '#FFB800',
+                            red: '#E41E26',
+                            green: '#278842'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', 'Noto Naskh Arabic', sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Smooth scroll & Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.1);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #3b82f6;
+            border-radius: 4px;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        .dark .glass-card {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(51, 65, 85, 0.5);
+        }
+
+        /* Drawer Overlay animation */
+        .drawer-slide {
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 min-h-screen flex flex-col selection:bg-blue-500 selection:text-white">
+
+    <!-- Top Header Navigation Bar -->
+    <header class="sticky top-0 z-30 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-4 py-3 flex items-center justify-between">
+        <div class="flex items-center space-x-3 rtl:space-x-reverse">
+            <!-- Hamburger Menu Toggle Button -->
+            <button id="open-drawer-btn" class="p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors focus:outline-none" aria-label="Open Sidebar Menu">
+                <i data-lucide="menu" class="w-6 h-6"></i>
+            </button>
+            
+            <!-- Brand Logo & Title -->
+            <div class="flex items-center space-x-2.5 rtl:space-x-reverse cursor-pointer" onclick="navigateTo('home')">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-amber-400 p-0.5 shadow-lg shadow-blue-500/20 flex items-center justify-center">
+                    <div class="w-full h-full bg-slate-900 rounded-[10px] flex items-center justify-center font-bold text-amber-400 text-sm tracking-wider">
+                        PBK
+                    </div>
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg leading-none tracking-tight text-slate-900 dark:text-white flex items-center gap-1">
+                        Projak Bo Kurda
+                        <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    </h1>
+                    <p class="text-[11px] text-slate-500 dark:text-slate-400 font-medium tracking-wide font-arabic" id="brand-subtext">
+                        پرۆژەک بۆ كوردا
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Top Stats & Controls -->
+        <div class="flex items-center space-x-2 rtl:space-x-reverse">
+            <!-- Quick Add Funds Chip -->
+            <button onclick="navigateTo('add-funds')" class="hidden sm:flex items-center space-x-1.5 rtl:space-x-reverse bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 px-3 py-1.5 rounded-full text-xs font-semibold border border-emerald-200 dark:border-emerald-800 hover:scale-105 transition-transform">
+                <i data-lucide="wallet" class="w-3.5 h-3.5"></i>
+                <span class="user-balance-text">$0.00</span>
+                <i data-lucide="plus-circle" class="w-3.5 h-3.5 ml-1 rtl:mr-1"></i>
+            </button>
+
+            <!-- Language Toggle Button -->
+            <button id="lang-toggle-btn" onclick="toggleLanguage()" class="p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-xs font-bold flex items-center gap-1 border border-slate-200 dark:border-slate-800">
+                <i data-lucide="globe" class="w-4 h-4"></i>
+                <span id="lang-indicator">KU</span>
+            </button>
+
+            <!-- Dark / Light Theme Toggle Button -->
+            <button id="theme-toggle-btn" onclick="toggleDarkMode()" class="p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors border border-slate-200 dark:border-slate-800">
+                <i data-lucide="moon" id="theme-icon" class="w-4 h-4"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Off-Canvas Sidebar Drawer Overlay -->
+    <div id="drawer-backdrop" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-40 hidden transition-opacity opacity-0" onclick="closeDrawer()"></div>
+
+    <!-- Off-Canvas Sidebar Drawer Container -->
+    <aside id="app-drawer" class="fixed top-0 left-0 rtl:right-0 rtl:left-auto w-80 max-w-[85vw] h-full bg-slate-900 text-white z-50 transform -translate-x-full rtl:translate-x-full drawer-slide flex flex-col shadow-2xl border-r rtl:border-r-0 rtl:border-l border-slate-800">
+        <!-- Drawer Header Section (Deep Navy Blue #0b192c) -->
+        <div class="bg-navy-900 p-5 border-b border-slate-800/80 relative overflow-hidden">
+            <!-- Background Glow Effect -->
+            <div class="absolute -top-12 -right-12 w-32 h-32 bg-blue-600/20 rounded-full blur-2xl pointer-events-none"></div>
+
+            <div class="flex items-center justify-between mb-4 relative z-10">
+                <div class="flex items-center space-x-3 rtl:space-x-reverse">
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150" alt="Sarwar Husain" class="w-12 h-12 rounded-full border-2 border-amber-400 object-cover shadow-md">
+                        <span class="absolute bottom-0 right-0 rtl:right-auto rtl:left-0 w-3.5 h-3.5 bg-emerald-500 border-2 border-navy-900 rounded-full"></span>
+                    </div>
+                    <div>
+                        <h2 class="font-bold text-white text-base leading-tight" id="drawer-user-name">Sarwar Husain Ali</h2>
+                        <p class="text-xs text-slate-400 font-mono mt-0.5" id="drawer-user-phone">+964 750 402 8914</p>
+                    </div>
+                </div>
+                <button onclick="closeDrawer()" class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/60 transition-colors">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <!-- Dynamic Balance Badge Display -->
+            <div class="bg-slate-800/80 rounded-xl p-3 border border-slate-700/50 flex items-center justify-between">
+                <div>
+                    <span class="text-[11px] text-slate-400 uppercase tracking-wider font-semibold block" data-i18n="balance_label">Available Balance</span>
+                    <span class="text-xl font-black text-amber-400 font-mono user-balance-text">$0.00</span>
+                </div>
+                <button onclick="navigateTo('add-funds'); closeDrawer();" class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-xs font-semibold px-3 py-2 rounded-lg shadow-md transition-all flex items-center gap-1">
+                    <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
+                    <span data-i18n="add_funds_btn">Add Funds</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Navigation Drawer Links Section -->
+        <div class="flex-1 overflow-y-auto p-4 space-y-1.5">
+            <button onclick="navigateTo('home'); closeDrawer();" class="nav-drawer-link w-full flex items-center space-x-3 rtl:space-x-reverse px-3.5 py-3 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/60 transition-all font-medium text-sm text-left rtl:text-right" data-page="home">
+                <i data-lucide="layout-dashboard" class="w-5 h-5 text-blue-400"></i>
+                <span data-i18n="nav_home">Home Dashboard</span>
+            </button>
+
+            <button onclick="navigateTo('order-services'); closeDrawer();" class="nav-drawer-link w-full flex items-center space-x-3 rtl:space-x-reverse px-3.5 py-3 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/60 transition-all font-medium text-sm text-left rtl:text-right" data-page="order-services">
+                <i data-lucide="shopping-bag" class="w-5 h-5 text-indigo-400"></i>
+                <span data-i18n="nav_order_services">Order Services</span>
+            </button>
+
+            <button onclick="navigateTo('add-funds'); closeDrawer();" class="nav-drawer-link w-full flex items-center space-x-3 rtl:space-x-reverse px-3.5 py-3 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/60 transition-all font-medium text-sm text-left rtl:text-right" data-page="add-funds">
+                <i data-lucide="credit-card" class="w-5 h-5 text-emerald-400"></i>
+                <span data-i18n="nav_add_funds">Add Funds</span>
+            </button>
+
+            <button onclick="navigateTo('order-history'); closeDrawer();" class="nav-drawer-link w-full flex items-center space-x-3 rtl:space-x-reverse px-3.5 py-3 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/60 transition-all font-medium text-sm text-left rtl:text-right" data-page="order-history">
+                <i data-lucide="clock" class="w-5 h-5 text-amber-400"></i>
+                <span data-i18n="nav_orders">My Orders History</span>
+            </button>
+
+            <button onclick="navigateTo('chat-support'); closeDrawer();" class="nav-drawer-link w-full flex items-center space-x-3 rtl:space-x-reverse px-3.5 py-3 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/60 transition-all font-medium text-sm text-left rtl:text-right" data-page="chat-support">
+                <i data-lucide="message-square" class="w-5 h-5 text-sky-400"></i>
+                <span data-i18n="nav_chat">Chat with Admin</span>
+            </button>
+
+            <button onclick="navigateTo('my-banners'); closeDrawer();" class="nav-drawer-link w-full flex items-center space-x-3 rtl:space-x-reverse px-3.5 py-3 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/60 transition-all font-medium text-sm text-left rtl:text-right" data-page="my-banners">
+                <i data-lucide="image" class="w-5 h-5 text-purple-400"></i>
+                <span data-i18n="nav_banners">My Banners & Ads</span>
+            </button>
+
+            <button onclick="navigateTo('profile'); closeDrawer();" class="nav-drawer-link w-full flex items-center space-x-3 rtl:space-x-reverse px-3.5 py-3 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/60 transition-all font-medium text-sm text-left rtl:text-right" data-page="profile">
+                <i data-lucide="user" class="w-5 h-5 text-pink-400"></i>
+                <span data-i18n="nav_profile">User Profile</span>
+            </button>
+
+            <button onclick="navigateTo('faq'); closeDrawer();" class="nav-drawer-link w-full flex items-center space-x-3 rtl:space-x-reverse px-3.5 py-3 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/60 transition-all font-medium text-sm text-left rtl:text-right" data-page="faq">
+                <i data-lucide="help-circle" class="w-5 h-5 text-teal-400"></i>
+                <span data-i18n="nav_faq">FAQ & Support</span>
+            </button>
+        </div>
+
+        <!-- Drawer Footer Branding -->
+        <div class="p-4 bg-slate-950/60 border-t border-slate-800/80 text-center text-xs text-slate-400">
+            <div class="flex items-center justify-center space-x-2 rtl:space-x-reverse mb-1">
+                <span class="font-bold text-amber-400">Projak Bo Kurda</span>
+                <span class="text-slate-600">|</span>
+                <span>v2.5 Pro</span>
+            </div>
+            <p data-i18n="footer_copy">Designed with excellence for Kurdistan</p>
+        </div>
+    </aside>
+
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
+
+        <!-- Notification / Alert Message Box Container -->
+        <div id="toast-notification" class="fixed bottom-5 right-5 rtl:right-auto rtl:left-5 z-50 hidden transition-all duration-300">
+            <div class="glass-card bg-slate-900 text-white dark:bg-slate-800 px-5 py-3.5 rounded-2xl shadow-2xl flex items-center space-x-3 rtl:space-x-reverse border border-slate-700">
+                <div id="toast-icon-bg" class="p-2 rounded-xl bg-emerald-500/20 text-emerald-400">
+                    <i data-lucide="check-circle" id="toast-icon" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <h4 class="font-bold text-sm" id="toast-title">Success</h4>
+                    <p class="text-xs text-slate-300" id="toast-message">Action executed successfully.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE 1: HOME DASHBOARD -->
+        <section id="page-home" class="page-content space-y-6">
+            <!-- Hero Promo Banner -->
+            <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-blue-700 via-indigo-700 to-purple-800 p-6 sm:p-10 text-white shadow-xl shadow-blue-900/10">
+                <div class="absolute -right-10 -bottom-10 w-60 h-60 bg-amber-400/20 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="relative z-10 max-w-2xl space-y-4">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-amber-300 text-xs font-semibold border border-white/10">
+                        <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+                        <span data-i18n="hero_badge">#1 Kurdistan Social Booster</span>
+                    </div>
+                    <h2 class="text-2xl sm:text-4xl font-extrabold leading-tight tracking-tight font-arabic" data-i18n="hero_title">
+                        Grow Your Social Media Presence Instantly
+                    </h2>
+                    <p class="text-sm sm:text-base text-blue-100/90 leading-relaxed font-arabic" data-i18n="hero_desc">
+                        Fastest Instagram, TikTok, YouTube, and Telegram boosting platform with automated local payments (FIB, FastPay, ZainCash).
+                    </p>
+                    <div class="flex flex-wrap gap-3 pt-2">
+                        <button onclick="navigateTo('order-services')" class="bg-amber-400 hover:bg-amber-300 text-slate-900 font-bold px-6 py-3 rounded-2xl shadow-lg transition-all flex items-center gap-2 text-sm">
+                            <i data-lucide="zap" class="w-4 h-4"></i>
+                            <span data-i18n="btn_order_now">New Order Now</span>
+                        </button>
+                        <button onclick="navigateTo('add-funds')" class="bg-white/10 hover:bg-white/20 text-white font-semibold px-6 py-3 rounded-2xl border border-white/20 transition-all text-sm">
+                            <span data-i18n="add_funds_btn">Add Funds</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard Key Metrics Grid -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="glass-card p-5 rounded-2xl flex flex-col justify-between hover:border-blue-500/50 transition-colors">
+                    <div class="flex items-center justify-between text-blue-500 mb-2">
+                        <span class="text-xs font-semibold text-slate-500 dark:text-slate-400" data-i18n="stat_balance">Current Balance</span>
+                        <div class="p-2 bg-blue-50 dark:bg-blue-950/50 rounded-xl"><i data-lucide="wallet" class="w-5 h-5"></i></div>
+                    </div>
+                    <span class="text-2xl font-black font-mono user-balance-text">$0.00</span>
+                </div>
+
+                <div class="glass-card p-5 rounded-2xl flex flex-col justify-between hover:border-indigo-500/50 transition-colors">
+                    <div class="flex items-center justify-between text-indigo-500 mb-2">
+                        <span class="text-xs font-semibold text-slate-500 dark:text-slate-400" data-i18n="stat_total_orders">Total Orders</span>
+                        <div class="p-2 bg-indigo-50 dark:bg-indigo-950/50 rounded-xl"><i data-lucide="shopping-cart" class="w-5 h-5"></i></div>
+                    </div>
+                    <span class="text-2xl font-black font-mono" id="stat-orders-count">0</span>
+                </div>
+
+                <div class="glass-card p-5 rounded-2xl flex flex-col justify-between hover:border-emerald-500/50 transition-colors">
+                    <div class="flex items-center justify-between text-emerald-500 mb-2">
+                        <span class="text-xs font-semibold text-slate-500 dark:text-slate-400" data-i18n="stat_active">Completed</span>
+                        <div class="p-2 bg-emerald-50 dark:bg-emerald-950/50 rounded-xl"><i data-lucide="check-circle" class="w-5 h-5"></i></div>
+                    </div>
+                    <span class="text-2xl font-black font-mono" id="stat-completed-count">0</span>
+                </div>
+
+                <div class="glass-card p-5 rounded-2xl flex flex-col justify-between hover:border-amber-500/50 transition-colors">
+                    <div class="flex items-center justify-between text-amber-500 mb-2">
+                        <span class="text-xs font-semibold text-slate-500 dark:text-slate-400" data-i18n="stat_support">Support Status</span>
+                        <div class="p-2 bg-amber-50 dark:bg-amber-950/50 rounded-xl"><i data-lucide="headphones" class="w-5 h-5"></i></div>
+                    </div>
+                    <span class="text-sm font-bold text-emerald-500 flex items-center gap-1.5 mt-1">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span> Online
+                    </span>
+                </div>
+            </div>
+
+            <!-- Quick Service Category Cards -->
+            <div class="space-y-3">
+                <h3 class="text-lg font-bold flex items-center gap-2" data-i18n="popular_services">
+                    Popular Services
+                </h3>
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
+                    <div onclick="selectCategoryAndOrder('instagram')" class="glass-card p-4 rounded-2xl text-center cursor-pointer hover:-translate-y-1 transition-all hover:shadow-lg border hover:border-pink-500/50 group">
+                        <div class="w-12 h-12 mx-auto rounded-2xl bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 text-white flex items-center justify-center mb-2 shadow-md group-hover:scale-110 transition-transform">
+                            <i data-lucide="instagram" class="w-6 h-6"></i>
+                        </div>
+                        <h4 class="font-bold text-xs">Instagram</h4>
+                        <p class="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">Followers & Likes</p>
+                    </div>
+
+                    <div onclick="selectCategoryAndOrder('tiktok')" class="glass-card p-4 rounded-2xl text-center cursor-pointer hover:-translate-y-1 transition-all hover:shadow-lg border hover:border-slate-500/50 group">
+                        <div class="w-12 h-12 mx-auto rounded-2xl bg-slate-900 text-white flex items-center justify-center mb-2 shadow-md group-hover:scale-110 transition-transform border border-slate-700">
+                            <i data-lucide="video" class="w-6 h-6 text-cyan-400"></i>
+                        </div>
+                        <h4 class="font-bold text-xs">TikTok</h4>
+                        <p class="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">Views & Boost</p>
+                    </div>
+
+                    <div onclick="selectCategoryAndOrder('youtube')" class="glass-card p-4 rounded-2xl text-center cursor-pointer hover:-translate-y-1 transition-all hover:shadow-lg border hover:border-red-500/50 group">
+                        <div class="w-12 h-12 mx-auto rounded-2xl bg-red-600 text-white flex items-center justify-center mb-2 shadow-md group-hover:scale-110 transition-transform">
+                            <i data-lucide="youtube" class="w-6 h-6"></i>
+                        </div>
+                        <h4 class="font-bold text-xs">YouTube</h4>
+                        <p class="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">Subscribers & Watch</p>
+                    </div>
+
+                    <div onclick="selectCategoryAndOrder('telegram')" class="glass-card p-4 rounded-2xl text-center cursor-pointer hover:-translate-y-1 transition-all hover:shadow-lg border hover:border-sky-500/50 group">
+                        <div class="w-12 h-12 mx-auto rounded-2xl bg-sky-500 text-white flex items-center justify-center mb-2 shadow-md group-hover:scale-110 transition-transform">
+                            <i data-lucide="send" class="w-6 h-6"></i>
+                        </div>
+                        <h4 class="font-bold text-xs">Telegram</h4>
+                        <p class="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">Channel Members</p>
+                    </div>
+
+                    <div onclick="selectCategoryAndOrder('facebook')" class="glass-card p-4 rounded-2xl text-center cursor-pointer hover:-translate-y-1 transition-all hover:shadow-lg border hover:border-blue-600/50 group">
+                        <div class="w-12 h-12 mx-auto rounded-2xl bg-blue-600 text-white flex items-center justify-center mb-2 shadow-md group-hover:scale-110 transition-transform">
+                            <i data-lucide="facebook" class="w-6 h-6"></i>
+                        </div>
+                        <h4 class="font-bold text-xs">Facebook</h4>
+                        <p class="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">Page Likes</p>
+                    </div>
+
+                    <div onclick="selectCategoryAndOrder('web')" class="glass-card p-4 rounded-2xl text-center cursor-pointer hover:-translate-y-1 transition-all hover:shadow-lg border hover:border-emerald-500/50 group">
+                        <div class="w-12 h-12 mx-auto rounded-2xl bg-emerald-600 text-white flex items-center justify-center mb-2 shadow-md group-hover:scale-110 transition-transform">
+                            <i data-lucide="globe" class="w-6 h-6"></i>
+                        </div>
+                        <h4 class="font-bold text-xs">Web Traffic</h4>
+                        <p class="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">Kurdish Visitors</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 2: ORDER SERVICES -->
+        <section id="page-order-services" class="page-content hidden space-y-6">
+            <div class="max-w-3xl mx-auto glass-card p-6 sm:p-8 rounded-3xl space-y-6 shadow-xl">
+                <div>
+                    <h2 class="text-2xl font-black flex items-center gap-2" data-i18n="order_title">
+                        <i data-lucide="shopping-bag" class="w-6 h-6 text-indigo-500"></i> Place New Order
+                    </h2>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-1" data-i18n="order_subtitle">
+                        Select a category, enter target link and quantity.
+                    </p>
+                </div>
+
+                <form id="order-form" onsubmit="handlePlaceOrder(event)" class="space-y-5">
+                    <!-- Service Category Dropdown -->
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-2" data-i18n="lbl_category">
+                            Category
+                        </label>
+                        <select id="order-category" onchange="updateServiceOptions()" class="w-full bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none transition-all">
+                            <option value="instagram">Instagram Services</option>
+                            <option value="tiktok">TikTok Boosting</option>
+                            <option value="youtube">YouTube Growth</option>
+                            <option value="telegram">Telegram Channel Boost</option>
+                            <option value="facebook">Facebook Page Followers</option>
+                            <option value="web">Web Traffic</option>
+                        </select>
+                    </div>
+
+                    <!-- Specific Service Selection -->
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-2" data-i18n="lbl_service">
+                            Service Package
+                        </label>
+                        <select id="order-service" onchange="calculateOrderTotal()" class="w-full bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none transition-all">
+                            <!-- Populated dynamically via JS -->
+                        </select>
+                    </div>
+
+                    <!-- Target Link / Username Field -->
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-2" data-i18n="lbl_link">
+                            Target Link or Username
+                        </label>
+                        <input type="text" id="order-link" required placeholder="https://instagram.com/your_username" class="w-full bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none transition-all">
+                    </div>
+
+                    <!-- Quantity Input Field -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-2" data-i18n="lbl_quantity">
+                                Quantity
+                            </label>
+                            <input type="number" id="order-quantity" min="100" max="100000" value="1000" oninput="calculateOrderTotal()" required class="w-full bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none transition-all font-mono">
+                            <span class="text-[11px] text-slate-400 mt-1 block">Min: 100 - Max: 100,000</span>
+                        </div>
+
+                        <!-- Price Calculation Preview Box -->
+                        <div class="bg-indigo-50 dark:bg-slate-800/80 p-4 rounded-2xl border border-indigo-100 dark:border-slate-700 flex flex-col justify-between">
+                            <span class="text-xs font-bold uppercase text-slate-500 dark:text-slate-400" data-i18n="lbl_total_charge">Total Charge</span>
+                            <div class="text-2xl font-black text-indigo-600 dark:text-indigo-400 font-mono" id="order-total-price">
+                                $0.00
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Submit Order Button -->
+                    <button type="submit" class="w-full bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-bold py-4 rounded-2xl shadow-xl transition-all flex items-center justify-center gap-2">
+                        <i data-lucide="check-circle" class="w-5 h-5"></i>
+                        <span data-i18n="btn_submit_order">Confirm & Place Order</span>
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- PAGE 3: ADD FUNDS / LOCAL PAYMENT GATEWAY -->
+        <section id="page-add-funds" class="page-content hidden space-y-6">
+            <div class="max-w-4xl mx-auto space-y-6">
+                <div>
+                    <h2 class="text-2xl font-black flex items-center gap-2" data-i18n="funds_title">
+                        <i data-lucide="wallet" class="w-6 h-6 text-emerald-500"></i> Add Funds to Account
+                    </h2>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-1" data-i18n="funds_subtitle">
+                        Instant deposits via Kurdistan local wallets & global crypto.
+                    </p>
+                </div>
+
+                <!-- Payment Methods Grid Selector -->
+                <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
+                    <div onclick="selectPaymentMethod('fib')" id="pm-fib" class="payment-method-card glass-card p-4 rounded-2xl cursor-pointer text-center border-2 border-emerald-500 bg-emerald-50/20 dark:bg-emerald-950/20 transition-all">
+                        <div class="font-black text-lg text-emerald-600 dark:text-emerald-400 mb-1">FIB</div>
+                        <span class="text-[11px] font-bold block text-slate-600 dark:text-slate-300">First Iraqi Bank</span>
+                    </div>
+
+                    <div onclick="selectPaymentMethod('fastpay')" id="pm-fastpay" class="payment-method-card glass-card p-4 rounded-2xl cursor-pointer text-center border-2 border-transparent hover:border-slate-300 transition-all">
+                        <div class="font-black text-lg text-rose-500 mb-1">FastPay</div>
+                        <span class="text-[11px] font-bold block text-slate-600 dark:text-slate-300">FastPay Wallet</span>
+                    </div>
+
+                    <div onclick="selectPaymentMethod('zaincash')" id="pm-zaincash" class="payment-method-card glass-card p-4 rounded-2xl cursor-pointer text-center border-2 border-transparent hover:border-slate-300 transition-all">
+                        <div class="font-black text-lg text-red-600 mb-1">ZainCash</div>
+                        <span class="text-[11px] font-bold block text-slate-600 dark:text-slate-300">ZainCash IQ</span>
+                    </div>
+
+                    <div onclick="selectPaymentMethod('qicard')" id="pm-qicard" class="payment-method-card glass-card p-4 rounded-2xl cursor-pointer text-center border-2 border-transparent hover:border-slate-300 transition-all">
+                        <div class="font-black text-lg text-amber-500 mb-1">Qi Card</div>
+                        <span class="text-[11px] font-bold block text-slate-600 dark:text-slate-300">Qi Card Deposit</span>
+                    </div>
+
+                    <div onclick="selectPaymentMethod('usdt')" id="pm-usdt" class="payment-method-card glass-card p-4 rounded-2xl cursor-pointer text-center border-2 border-transparent hover:border-slate-300 transition-all">
+                        <div class="font-black text-lg text-teal-400 mb-1">USDT</div>
+                        <span class="text-[11px] font-bold block text-slate-600 dark:text-slate-300">TRC20 Crypto</span>
+                    </div>
+                </div>
+
+                <!-- Payment Details Card -->
+                <div class="glass-card p-6 sm:p-8 rounded-3xl space-y-6">
+                    <div class="p-4 rounded-2xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <div>
+                            <span class="text-xs uppercase font-bold text-slate-400" id="deposit-method-title">Transfer to FIB Account</span>
+                            <div class="text-lg font-mono font-bold text-slate-900 dark:text-white mt-1 flex items-center gap-2" id="deposit-account-number">
+                                0750 402 8914
+                            </div>
+                            <span class="text-xs text-slate-500">Account Name: Projak Bo Kurda Official</span>
+                        </div>
+                        <button onclick="copyDepositNumber()" class="bg-slate-200 dark:bg-slate-700 text-xs font-bold px-3 py-2 rounded-xl flex items-center gap-1.5 hover:bg-slate-300 transition-colors">
+                            <i data-lucide="copy" class="w-4 h-4"></i>
+                            <span data-i18n="btn_copy">Copy Number</span>
+                        </button>
+                    </div>
+
+                    <!-- Submit Transaction Form -->
+                    <form id="deposit-form" onsubmit="handleDepositSubmit(event)" class="space-y-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-slate-600 dark:text-slate-300 mb-2" data-i18n="lbl_amount_usd">Amount ($ USD)</label>
+                                <input type="number" id="deposit-amount" min="5" required placeholder="10" class="w-full bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-slate-600 dark:text-slate-300 mb-2" data-i18n="lbl_tx_id">Transaction Reference ID</label>
+                                <input type="text" id="deposit-txid" required placeholder="TXN-98432104" class="w-full bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-4 rounded-2xl shadow-lg transition-all flex items-center justify-center gap-2">
+                            <i data-lucide="send" class="w-5 h-5"></i>
+                            <span data-i18n="btn_submit_deposit">Submit Deposit Notification</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 4: MY ORDERS HISTORY -->
+        <section id="page-order-history" class="page-content hidden space-y-6">
+            <div class="glass-card p-6 sm:p-8 rounded-3xl space-y-6 shadow-xl">
+                <div>
+                    <h2 class="text-2xl font-black flex items-center gap-2" data-i18n="history_title">
+                        <i data-lucide="clock" class="w-6 h-6 text-amber-500"></i> Order History
+                    </h2>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-1" data-i18n="history_subtitle">
+                        Track status of all your placed services in real-time.
+                    </p>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left rtl:text-right border-collapse">
+                        <thead>
+                            <tr class="border-b border-slate-200 dark:border-slate-800 text-xs font-bold uppercase text-slate-400">
+                                <th class="py-3 px-4">ID</th>
+                                <th class="py-3 px-4">Service</th>
+                                <th class="py-3 px-4">Link</th>
+                                <th class="py-3 px-4">Qty</th>
+                                <th class="py-3 px-4">Cost</th>
+                                <th class="py-3 px-4">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orders-table-body" class="text-sm divide-y divide-slate-100 dark:divide-slate-800/50">
+                            <!-- Populated dynamically via JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 5: CHAT WITH ADMIN / SUPPORT DESK -->
+        <section id="page-chat-support" class="page-content hidden space-y-6">
+            <div class="max-w-3xl mx-auto glass-card rounded-3xl overflow-hidden shadow-xl flex flex-col h-[600px]">
+                <!-- Chat Header -->
+                <div class="bg-slate-900 p-4 border-b border-slate-800 flex items-center justify-between text-white">
+                    <div class="flex items-center space-x-3 rtl:space-x-reverse">
+                        <div class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center font-bold">
+                            PBK
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-sm">Projak Bo Kurda Support</h3>
+                            <p class="text-[11px] text-emerald-400 flex items-center gap-1">
+                                <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Online Help Desk
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chat Messages Scroll Box -->
+                <div id="chat-messages" class="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50/50 dark:bg-slate-950/50">
+                    <div class="flex justify-start">
+                        <div class="bg-white dark:bg-slate-800 p-3.5 rounded-2xl rounded-tl-none max-w-[80%] text-xs shadow-sm border border-slate-200 dark:border-slate-700">
+                            <p class="font-bold text-blue-500 mb-1">Support Bot</p>
+                            <p data-i18n="chat_welcome">Bexêr bî bo Projak Bo Kurda! Chawa dikarin alîkariya te bikin? (Welcome! How can we assist you today?)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chat Input Controls -->
+                <form id="chat-form" onsubmit="handleSendChatMessage(event)" class="p-3 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 flex items-center gap-2">
+                    <input type="text" id="chat-input" required placeholder="Type your inquiry here..." class="flex-1 bg-slate-100 dark:bg-slate-800 border-none rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-500 text-white p-3 rounded-2xl transition-colors">
+                        <i data-lucide="send" class="w-5 h-5"></i>
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- PAGE 6: BANNERS -->
+        <section id="page-my-banners" class="page-content hidden space-y-6">
+            <div class="glass-card p-6 rounded-3xl space-y-4">
+                <h2 class="text-xl font-bold flex items-center gap-2">
+                    <i data-lucide="image" class="w-5 h-5 text-purple-400"></i> Promotional Banners
+                </h2>
+                <p class="text-xs text-slate-500">Download official banners or request custom advertising artwork for your channel.</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                    <div class="bg-gradient-to-r from-blue-900 to-indigo-900 p-6 rounded-2xl text-white flex flex-col justify-between h-40">
+                        <div>
+                            <span class="text-[10px] uppercase font-bold text-amber-400">Official Banner</span>
+                            <h3 class="font-bold text-lg mt-1">Projak Bo Kurda V2</h3>
+                        </div>
+                        <button onclick="showToast('Banner downloaded successfully!', 'success')" class="self-start bg-white/20 hover:bg-white/30 text-xs px-3 py-1.5 rounded-lg border border-white/20">Download Asset</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 7: PROFILE -->
+        <section id="page-profile" class="page-content hidden space-y-6">
+            <div class="max-w-2xl mx-auto glass-card p-6 sm:p-8 rounded-3xl space-y-6">
+                <h2 class="text-xl font-bold flex items-center gap-2">
+                    <i data-lucide="user" class="w-5 h-5 text-pink-500"></i> User Profile Settings
+                </h2>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Full Name</label>
+                        <input type="text" id="profile-name-input" value="Sarwar Husain Ali" class="w-full bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-2xl px-4 py-3 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Phone Number</label>
+                        <input type="text" id="profile-phone-input" value="+9647504028914" class="w-full bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-2xl px-4 py-3 text-sm">
+                    </div>
+                    <button onclick="saveProfileChanges()" class="bg-blue-600 text-white font-bold px-6 py-3 rounded-2xl text-sm">Save Profile Changes</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 8: FAQ -->
+        <section id="page-faq" class="page-content hidden space-y-4">
+            <div class="max-w-3xl mx-auto space-y-3">
+                <h2 class="text-xl font-bold flex items-center gap-2 mb-4">
+                    <i data-lucide="help-circle" class="w-5 h-5 text-teal-400"></i> Frequently Asked Questions
+                </h2>
+                <div class="glass-card p-4 rounded-2xl space-y-2">
+                    <h3 class="font-bold text-sm">How long does an order take to start?</h3>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Most orders start automatically within 1 to 15 minutes after placement.</p>
+                </div>
+                <div class="glass-card p-4 rounded-2xl space-y-2">
+                    <h3 class="font-bold text-sm">Which local Kurdish payment methods are supported?</h3>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">We accept First Iraqi Bank (FIB), FastPay, ZainCash, Qi Card, and USDT crypto.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // Default App State
+        let appState = {
+            lang: 'en', // 'en' or 'ku'
+            theme: 'dark', // 'dark' or 'light'
+            user: {
+                name: 'Sarwar Husain Ali',
+                phone: '+9647504028914',
+                balance: 0.00
+            },
+            orders: [
+                { id: 'PBK-1092', service: 'Instagram Followers (Real Kurdish)', link: 'https://instagram.com/sarwar_ali', qty: 1000, price: 2.50, status: 'Completed' }
+            ],
+            selectedPaymentMethod: 'fib'
+        };
+
+        // Service Catalog Data
+        const serviceCatalog = {
+            instagram: [
+                { id: 'ig-fol-1', name: 'Instagram Followers [Real Kurdish Active]', pricePer1k: 2.50 },
+                { id: 'ig-like-1', name: 'Instagram Real Instant Likes', pricePer1k: 0.80 },
+                { id: 'ig-view-1', name: 'Instagram Video & Reel Views', pricePer1k: 0.20 }
+            ],
+            tiktok: [
+                { id: 'tk-view-1', name: 'TikTok Instant Video Views', pricePer1k: 0.15 },
+                { id: 'tk-fol-1', name: 'TikTok Organic Followers', pricePer1k: 3.20 },
+                { id: 'tk-like-1', name: 'TikTok Post Likes', pricePer1k: 1.10 }
+            ],
+            youtube: [
+                { id: 'yt-sub-1', name: 'YouTube Non-Drop Subscribers', pricePer1k: 12.00 },
+                { id: 'yt-view-1', name: 'YouTube Monetizable Watch Views', pricePer1k: 4.50 }
+            ],
+            telegram: [
+                { id: 'tg-mem-1', name: 'Telegram Channel Members [Kurdish Target]', pricePer1k: 3.00 },
+                { id: 'tg-react-1', name: 'Telegram Post Views & Reactions', pricePer1k: 0.40 }
+            ],
+            facebook: [
+                { id: 'fb-page-1', name: 'Facebook Page Likes & Followers', pricePer1k: 4.00 }
+            ],
+            web: [
+                { id: 'web-trf-1', name: 'Kurdish Local Organic Web Visitors', pricePer1k: 1.50 }
+            ]
+        };
+
+        // Payment Details Mapping
+        const paymentDetailsMap = {
+            fib: { title: 'First Iraqi Bank (FIB)', number: '0750 402 8914', name: 'Projak Bo Kurda Official' },
+            fastpay: { title: 'FastPay Wallet', number: '0750 402 8914', name: 'PBK Digital FastPay' },
+            zaincash: { title: 'ZainCash Wallet', number: '0780 123 4567', name: 'PBK ZainCash Service' },
+            qicard: { title: 'Qi Card Deposit Number', number: '6037 8291 0041 2291', name: 'PBK Kurdistan Qi' },
+            usdt: { title: 'USDT TRC20 Wallet Address', number: 'TY9xL82kM1nQpS4zW9eR2tU7vY3xZ1aB2c', name: 'Projak Crypto Reserve' }
+        };
+
+        // Kurdish & English Dictionary
+        const i18n = {
+            en: {
+                balance_label: "Available Balance",
+                add_funds_btn: "Add Funds",
+                nav_home: "Home Dashboard",
+                nav_order_services: "Order Services",
+                nav_add_funds: "Add Funds",
+                nav_orders: "My Orders History",
+                nav_chat: "Chat with Admin",
+                nav_banners: "My Banners & Ads",
+                nav_profile: "User Profile",
+                nav_faq: "FAQ & Support",
+                footer_copy: "Designed with excellence for Kurdistan",
+                hero_badge: "#1 Kurdistan Social Booster",
+                hero_title: "Grow Your Social Media Presence Instantly",
+                hero_desc: "Fastest Instagram, TikTok, YouTube, and Telegram boosting platform with automated local payments (FIB, FastPay, ZainCash).",
+                btn_order_now: "New Order Now",
+                stat_balance: "Current Balance",
+                stat_total_orders: "Total Orders",
+                stat_active: "Completed",
+                stat_support: "Support Status",
+                popular_services: "Popular Services",
+                order_title: "Place New Order",
+                order_subtitle: "Select a category, enter target link and quantity.",
+                lbl_category: "Category",
+                lbl_service: "Service Package",
+                lbl_link: "Target Link or Username",
+                lbl_quantity: "Quantity",
+                lbl_total_charge: "Total Charge",
+                btn_submit_order: "Confirm & Place Order",
+                funds_title: "Add Funds to Account",
+                funds_subtitle: "Instant deposits via Kurdistan local wallets & global crypto.",
+                btn_copy: "Copy Number",
+                lbl_amount_usd: "Amount ($ USD)",
+                lbl_tx_id: "Transaction Reference ID",
+                btn_submit_deposit: "Submit Deposit Notification",
+                history_title: "Order History",
+                history_subtitle: "Track status of all your placed services in real-time.",
+                chat_welcome: "Bexêr bî bo Projak Bo Kurda! Chawa dikarin alîkariya te bikin? (Welcome! How can we assist you today?)"
+            },
+            ku: {
+                balance_label: "باڵانسی بەردەست",
+                add_funds_btn: "زێدەکرنا باڵانسی",
+                nav_home: "سەرەکی",
+                nav_order_services: "داواکرنا خزمەتگوزارییان",
+                nav_add_funds: "زێدەکرنا باڵانسی",
+                nav_orders: "مێژووا داواکارییان",
+                nav_chat: "ئاخڤتن دگەڵ ئەدمینی",
+                nav_banners: "بانەر و ڕیکلامێن من",
+                nav_profile: "پڕۆفایلی من",
+                nav_faq: "پرسیارێن دووبارە",
+                footer_copy: "تایبەت بۆ کوردستانێ هاتپە دروستکرن",
+                hero_badge: "سیستەمێ ژمارە ١ ل کوردستانێ",
+                hero_title: "تۆڕێن خۆ یێن جڤاکی ب ئاسانی بەرفراوان بکە",
+                hero_desc: "خێراترین پلاتفۆرم بۆ زیادکرنا فۆڵۆوەر و لایکێن ئینستاگرام، تیک تۆک و یوتیوب ب پارەدانا ناوخۆیی (FIB, FastPay, ZainCash).",
+                btn_order_now: "داواکرنا نوو",
+                stat_balance: "باڵانسێ نوکە",
+                stat_total_orders: "سەرجەمێ داواکارییان",
+                stat_active: "ب دوماهی هاتی",
+                stat_support: "پشتگیری",
+                popular_services: "خزمەتگوزاریێن بەربەلاڤ",
+                order_title: "تۆمارکرنا داواکاریا نوو",
+                order_subtitle: "بەشێ خزمەتگوزاریێ دەستنیشان بکە و لینک و ژمارەیێ بنڤێسە.",
+                lbl_category: "پۆلێن خزمەتگوزاریێ",
+                lbl_service: "پۆشتا خزمەتگوزاریێ",
+                lbl_link: "لینک یان ناڤێ ئەکاونتی",
+                lbl_quantity: "بڕ / ژمارە",
+                lbl_total_charge: "کۆی گشتی نرخ",
+                btn_submit_order: "پشتڕاستکرن و ناردنا داواکاریێ",
+                funds_title: "زێدەکرنا باڵانسی بۆ ئەکاونتی",
+                funds_subtitle: "پارەدان ب ڕێکا کارت و جزدانێن ناوخۆیی یێن کوردستانێ.",
+                btn_copy: "کۆپیکرنا ژمارەیێ",
+                lbl_amount_usd: "بڕی پارەی ($ دۆلار)",
+                lbl_tx_id: "کۆدی حەواڵەیێ (Transaction ID)",
+                btn_submit_deposit: "ناردنا زانیاریێن حەواڵەیێ",
+                history_title: "مێژووا داواکارییان",
+                history_subtitle: "بەدواداچوون بۆ ڕەوشا داواکاریێن خۆ بکە ب شێوەیەکێ زۆربەدەست.",
+                chat_welcome: "بەخێر بێی بۆ پرۆژەک بۆ کوردا! چاوا دکارین هاریکاریا تە بکەین؟"
+            }
+        };
+
+        window.addEventListener('DOMContentLoaded', () => {
+            loadSavedState();
+            initializeLucideIcons();
+            updateServiceOptions();
+            renderOrdersTable();
+            updateUI();
+        });
+
+        function initializeLucideIcons() {
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+        }
+
+        // State Persistence Management
+        function loadSavedState() {
+            const saved = localStorage.getItem('pbk_app_state');
+            if (saved) {
+                try {
+                    appState = { ...appState, ...JSON.parse(saved) };
+                } catch (e) {
+                    console.error("Failed to parse stored state:", e);
+                }
+            }
+        }
+
+        function saveState() {
+            localStorage.setItem('pbk_app_state', JSON.stringify(appState));
+            updateUI();
+        }
+
+        // Navigation Engine
+        function navigateTo(pageId) {
+            document.querySelectorAll('.page-content').forEach(el => el.classList.add('hidden'));
+            const targetPage = document.getElementById(`page-${pageId}`);
+            if (targetPage) {
+                targetPage.classList.remove('hidden');
+            }
+
+            // Highlight Active Drawer Link
+            document.querySelectorAll('.nav-drawer-link').forEach(btn => {
+                if (btn.getAttribute('data-page') === pageId) {
+                    btn.classList.add('bg-slate-800', 'text-white');
+                } else {
+                    btn.classList.remove('bg-slate-800', 'text-white');
+                }
+            });
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Drawer Navigation Controls
+        const drawer = document.getElementById('app-drawer');
+        const backdrop = document.getElementById('drawer-backdrop');
+
+        document.getElementById('open-drawer-btn').addEventListener('click', () => {
+            backdrop.classList.remove('hidden');
+            setTimeout(() => {
+                backdrop.classList.remove('opacity-0');
+                drawer.classList.remove('-translate-x-full', 'rtl:translate-x-full');
+            }, 10);
+        });
+
+        function closeDrawer() {
+            drawer.classList.add('-translate-x-full', 'rtl:translate-x-full');
+            backdrop.classList.add('opacity-0');
+            setTimeout(() => {
+                backdrop.classList.add('hidden');
+            }, 300);
+        }
+
+        // Language Switcher (Kurdish / English + Direction)
+        function toggleLanguage() {
+            appState.lang = appState.lang === 'en' ? 'ku' : 'en';
+            saveState();
+        }
+
+        function applyLanguageUI() {
+            const isKu = appState.lang === 'ku';
+            document.documentElement.dir = isKu ? 'rtl' : 'ltr';
+            document.documentElement.lang = isKu ? 'ku' : 'en';
+            document.getElementById('lang-indicator').innerText = isKu ? 'EN' : 'KU';
+
+            // Replace Text Elements marked with data-i18n
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (i18n[appState.lang] && i18n[appState.lang][key]) {
+                    el.innerText = i18n[appState.lang][key];
+                }
+            });
+        }
+
+        // Dark / Light Theme Switching
+        function toggleDarkMode() {
+            appState.theme = appState.theme === 'dark' ? 'light' : 'dark';
+            saveState();
+        }
+
+        function applyThemeUI() {
+            const icon = document.getElementById('theme-icon');
+            if (appState.theme === 'dark') {
+                document.documentElement.classList.add('dark');
+                if (icon) icon.setAttribute('data-lucide', 'sun');
+            } else {
+                document.documentElement.classList.remove('dark');
+                if (icon) icon.setAttribute('data-lucide', 'moon');
+            }
+            initializeLucideIcons();
+        }
+
+        function selectCategoryAndOrder(cat) {
+            const catSelect = document.getElementById('order-category');
+            if (catSelect) catSelect.value = cat;
+            updateServiceOptions();
+            navigateTo('order-services');
+        }
+
+        function updateServiceOptions() {
+            const category = document.getElementById('order-category').value;
+            const serviceSelect = document.getElementById('order-service');
+            serviceSelect.innerHTML = '';
+
+            const services = serviceCatalog[category] || [];
+            services.forEach(s => {
+                const opt = document.createElement('option');
+                opt.value = s.id;
+                opt.textContent = `${s.name} - $${s.pricePer1k.toFixed(2)} / 1k`;
+                serviceSelect.appendChild(opt);
+            });
+
+            calculateOrderTotal();
+        }
+
+        function calculateOrderTotal() {
+            const category = document.getElementById('order-category').value;
+            const serviceId = document.getElementById('order-service').value;
+            const qty = parseInt(document.getElementById('order-quantity').value) || 0;
+
+            const services = serviceCatalog[category] || [];
+            const selected = services.find(s => s.id === serviceId);
+
+            if (selected) {
+                const total = (selected.pricePer1k / 1000) * qty;
+                document.getElementById('order-total-price').innerText = `$${total.toFixed(2)}`;
+            }
+        }
+
+        function handlePlaceOrder(e) {
+            e.preventDefault();
+            const category = document.getElementById('order-category').value;
+            const serviceId = document.getElementById('order-service').value;
+            const link = document.getElementById('order-link').value;
+            const qty = parseInt(document.getElementById('order-quantity').value) || 0;
+
+            const services = serviceCatalog[category] || [];
+            const selected = services.find(s => s.id === serviceId);
+            if (!selected) return;
+
+            const totalCost = (selected.pricePer1k / 1000) * qty;
+
+            if (appState.user.balance < totalCost) {
+                showToast("Insufficient Balance! Please add funds.", "error");
+                return;
+            }
+
+            // Deduct Balance & Create Order Record
+            appState.user.balance -= totalCost;
+            const newOrder = {
+                id: 'PBK-' + Math.floor(1000 + Math.random() * 9000),
+                service: selected.name,
+                link: link,
+                qty: qty,
+                price: totalCost,
+                status: 'Processing'
+            };
+
+            appState.orders.unshift(newOrder);
+            saveState();
+            renderOrdersTable();
+
+            showToast("Order placed successfully!", "success");
+            document.getElementById('order-form').reset();
+            updateServiceOptions();
+            navigateTo('order-history');
+        }
+
+        function selectPaymentMethod(methodKey) {
+            appState.selectedPaymentMethod = methodKey;
+            
+            document.querySelectorAll('.payment-method-card').forEach(card => {
+                card.classList.remove('border-emerald-500', 'bg-emerald-50/20', 'dark:bg-emerald-950/20');
+                card.classList.add('border-transparent');
+            });
+
+            const activeCard = document.getElementById(`pm-${methodKey}`);
+            if (activeCard) {
+                activeCard.classList.remove('border-transparent');
+                activeCard.classList.add('border-emerald-500', 'bg-emerald-50/20', 'dark:bg-emerald-950/20');
+            }
+
+            const info = paymentDetailsMap[methodKey];
+            if (info) {
+                document.getElementById('deposit-method-title').innerText = info.title;
+                document.getElementById('deposit-account-number').innerText = info.number;
+            }
+        }
+
+        function copyDepositNumber() {
+            const num = document.getElementById('deposit-account-number').innerText;
+            navigator.clipboard.writeText(num);
+            showToast("Account number copied to clipboard!", "success");
+        }
+
+        function handleDepositSubmit(e) {
+            e.preventDefault();
+            const amount = parseFloat(document.getElementById('deposit-amount').value) || 0;
+            const txid = document.getElementById('deposit-txid').value;
+
+            if (amount <= 0 || !txid) {
+                showToast("Please enter a valid amount and transaction ID.", "error");
+                return;
+            }
+
+            // Auto Approve Deposit Mock
+            appState.user.balance += amount;
+            saveState();
+
+            showToast(`Deposit of $${amount.toFixed(2)} verified & credited!`, "success");
+            document.getElementById('deposit-form').reset();
+            navigateTo('home');
+        }
+
+        function handleSendChatMessage(e) {
+            e.preventDefault();
+            const input = document.getElementById('chat-input');
+            const msg = input.value.trim();
+            if (!msg) return;
+
+            const chatBox = document.getElementById('chat-messages');
+
+            // Append User Message
+            const userMsgDiv = document.createElement('div');
+            userMsgDiv.className = 'flex justify-end';
+            userMsgDiv.innerHTML = `
+                <div class="bg-blue-600 text-white p-3.5 rounded-2xl rounded-tr-none max-w-[80%] text-xs shadow-sm">
+                    <p class="font-bold text-blue-200 mb-0.5">You</p>
+                    <p>${escapeHtml(msg)}</p>
+                </div>
+            `;
+            chatBox.appendChild(userMsgDiv);
+            input.value = '';
+
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            // Automated Bot Response Logic
+            setTimeout(() => {
+                const botMsgDiv = document.createElement('div');
+                botMsgDiv.className = 'flex justify-start';
+                botMsgDiv.innerHTML = `
+                    <div class="bg-white dark:bg-slate-800 p-3.5 rounded-2xl rounded-tl-none max-w-[80%] text-xs shadow-sm border border-slate-200 dark:border-slate-700">
+                        <p class="font-bold text-blue-500 mb-1">Support Bot</p>
+                        <p>Supas bo peyوەندیا تە. Support team will review reference #${Math.floor(Math.random()*90000+10000)} shortly!</p>
+                    </div>
+                `;
+                chatBox.appendChild(botMsgDiv);
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }, 1000);
+        }
+
+        function renderOrdersTable() {
+            const tbody = document.getElementById('orders-table-body');
+            tbody.innerHTML = '';
+
+            if (appState.orders.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-6 text-slate-400 text-xs">No orders placed yet.</td></tr>`;
+                return;
+            }
+
+            appState.orders.forEach(order => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-slate-50 dark:hover:bg-slate-900/50 transition-colors';
+                
+                let badgeColor = 'bg-amber-500/10 text-amber-500 border-amber-500/20';
+                if (order.status === 'Completed') badgeColor = 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20';
+                if (order.status === 'Processing') badgeColor = 'bg-blue-500/10 text-blue-500 border-blue-500/20';
+
+                tr.innerHTML = `
+                    <td class="py-3.5 px-4 font-mono font-bold text-xs">${order.id}</td>
+                    <td class="py-3.5 px-4 font-medium text-xs max-w-[200px] truncate">${order.service}</td>
+                    <td class="py-3.5 px-4 font-mono text-xs text-blue-400 max-w-[150px] truncate">${escapeHtml(order.link)}</td>
+                    <td class="py-3.5 px-4 font-mono text-xs">${order.qty}</td>
+                    <td class="py-3.5 px-4 font-mono font-bold text-xs">$${order.price.toFixed(2)}</td>
+                    <td class="py-3.5 px-4">
+                        <span class="px-2.5 py-1 rounded-full text-[10px] font-bold border ${badgeColor}">
+                            ${order.status}
+                        </span>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function saveProfileChanges() {
+            const name = document.getElementById('profile-name-input').value;
+            const phone = document.getElementById('profile-phone-input').value;
+            appState.user.name = name;
+            appState.user.phone = phone;
+            saveState();
+            showToast("Profile details updated!", "success");
+        }
+
+        function updateUI() {
+            // Balance Update across all elements
+            document.querySelectorAll('.user-balance-text').forEach(el => {
+                el.innerText = `$${appState.user.balance.toFixed(2)}`;
+            });
+
+            // User Info in Drawer
+            document.getElementById('drawer-user-name').innerText = appState.user.name;
+            document.getElementById('drawer-user-phone').innerText = appState.user.phone;
+
+            // Stats Count Update
+            document.getElementById('stat-orders-count').innerText = appState.orders.length;
+            const completed = appState.orders.filter(o => o.status === 'Completed').length;
+            document.getElementById('stat-completed-count').innerText = completed;
+
+            applyLanguageUI();
+            applyThemeUI();
+        }
+
+        // Notification Toast Display Helper
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast-notification');
+            const msgEl = document.getElementById('toast-message');
+            const iconBg = document.getElementById('toast-icon-bg');
+            const icon = document.getElementById('toast-icon');
+
+            msgEl.innerText = message;
+            if (type === 'error') {
+                iconBg.className = 'p-2 rounded-xl bg-red-500/20 text-red-400';
+                icon.setAttribute('data-lucide', 'alert-circle');
+            } else {
+                iconBg.className = 'p-2 rounded-xl bg-emerald-500/20 text-emerald-400';
+                icon.setAttribute('data-lucide', 'check-circle');
+            }
+            initializeLucideIcons();
+
+            toast.classList.remove('hidden');
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3000);
+        }
+
+        function escapeHtml(text) {
+            return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        }
+    </script>
+</body>
+</html>
